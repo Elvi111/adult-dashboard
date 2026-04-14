@@ -7,8 +7,6 @@ st.set_page_config(page_title="Adult Dashboard", layout="wide")
 # Load data
 df = pd.read_csv("adult (1).csv", sep=",", skipinitialspace=True)
 df = df.dropna()
-
-# Clean column names
 df.columns = df.columns.str.strip()
 
 # Title
@@ -63,7 +61,7 @@ col1.metric("Rows", len(filtered_df))
 col2.metric("Average Age", round(filtered_df["age"].mean(), 1) if len(filtered_df) > 0 else 0)
 col3.metric("Average Weekly Hours", round(filtered_df["hours.per.week"].mean(), 1) if len(filtered_df) > 0 else 0)
 
-# Preview data
+# Preview
 st.subheader("Dataset Preview")
 st.dataframe(filtered_df)
 
@@ -72,21 +70,12 @@ col4, col5 = st.columns(2)
 
 with col4:
 st.subheader("Age Distribution")
-fig1 = px.histogram(
-filtered_df,
-x="age",
-nbins=30,
-title="Age Distribution"
-)
+fig1 = px.histogram(filtered_df, x="age", nbins=30)
 st.plotly_chart(fig1, use_container_width=True)
 
 with col5:
 st.subheader("Income Distribution")
-fig2 = px.pie(
-filtered_df,
-names="income",
-title="Income Distribution"
-)
+fig2 = px.pie(filtered_df, names="income")
 st.plotly_chart(fig2, use_container_width=True)
 
 col6, col7 = st.columns(2)
@@ -95,21 +84,10 @@ with col6:
 st.subheader("Education Distribution")
 education_counts = filtered_df["education"].value_counts().reset_index()
 education_counts.columns = ["education", "count"]
-fig3 = px.bar(
-education_counts,
-x="education",
-y="count",
-title="Education Distribution"
-)
+fig3 = px.bar(education_counts, x="education", y="count")
 st.plotly_chart(fig3, use_container_width=True)
 
 with col7:
 st.subheader("Age vs Working Hours")
-fig4 = px.scatter(
-filtered_df,
-x="age",
-y="hours.per.week",
-color="income",
-title="Age vs Working Hours"
-)
+fig4 = px.scatter(filtered_df, x="age", y="hours.per.week", color="income")
 st.plotly_chart(fig4, use_container_width=True)
