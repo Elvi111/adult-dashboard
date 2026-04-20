@@ -3,7 +3,7 @@ import pandas as pd
 import plotly.express as px
 
 # Load data
-df = pd.read_csv("adult.csv")
+df = pd.read_csv("adult (1).csv")
 df = df.dropna()
 
 st.title("📊 Adult Dataset Dashboard")
