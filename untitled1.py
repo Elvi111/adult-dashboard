@@ -2,54 +2,34 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-st.set_page_config(page_title="Adult Dashboard", layout="wide")
-
 # Load data
-df = pd.read_csv("adult (1).csv", sep=",", skipinitialspace=True)
+df = pd.read_csv("adult.csv")
 df = df.dropna()
-df.columns = df.columns.str.strip()
 
-# Title
-st.title("Adult Income Dashboard")
+st.title("📊 Adult Dataset Dashboard")
 
-# Sidebar
-st.sidebar.header("Filters")
+# Filter
+age_range = st.slider("Select Age Range",
+                      int(df.age.min()),
+                      int(df.age.max()),
+                      (20, 50))
 
-education = st.sidebar.multiselect(
-"Education",
-df["education"].unique(),
-default=df["education"].unique()
-)
+filtered_df = df[(df.age >= age_range[0]) & (df.age <= age_range[1])]
 
-income = st.sidebar.multiselect(
-"Income",
-df["income"].unique(),
-default=df["income"].unique()
-)
-
-# Filter data
-filtered_df = df[
-(df["education"].isin(education)) &
-(df["income"].isin(income))
-]
-
-# Show data
-st.subheader("Data")
-st.dataframe(filtered_df)
-
-# Charts
-st.subheader("Age Distribution")
-fig1 = px.histogram(filtered_df, x="age")
+# Histogram
+fig1 = px.histogram(filtered_df, x='age', nbins=30, title='Age Distribution')
 st.plotly_chart(fig1)
 
-st.subheader("Income Distribution")
-fig2 = px.pie(filtered_df, names="income")
+# Bar chart
+fig2 = px.histogram(filtered_df, x="education", color="income", barmode="group",
+title="Income by Education")
 st.plotly_chart(fig2)
 
-st.subheader("Education Distribution")
-fig3 = px.bar(filtered_df, x="education")
+# Scatter
+fig3 = px.scatter(filtered_df, x='age', y='hours.per.week',
+color='income', title='Age vs Working Hours')
 st.plotly_chart(fig3)
 
-st.subheader("Age vs Hours")
-fig4 = px.scatter(filtered_df, x="age", y="hours.per.week", color="income")
+# Pie
+fig4 = px.pie(filtered_df, names='income', title='Income Distribution')
 st.plotly_chart(fig4)
